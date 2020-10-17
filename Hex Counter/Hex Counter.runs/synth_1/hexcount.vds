@@ -1,0 +1,213 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Fri Oct 16 21:23:05 2020
+# Process ID: 1884
+# Current directory: C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.runs/synth_1
+# Command line: vivado.exe -log hexcount.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source hexcount.tcl
+# Log file: C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.runs/synth_1/hexcount.vds
+# Journal file: C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source hexcount.tcl -notrace
+Command: synth_design -top hexcount -part xc7a100tcsg324-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 13400
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 1034.406 ; gain = 0.000
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'hexcount' [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/sources_1/new/hexcounter.vhd:32]
+INFO: [Synth 8-3491] module 'counter' declared at 'C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/sources_1/new/counter.vhd:26' bound to instance 'C1' of component 'counter' [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/sources_1/new/hexcounter.vhd:49]
+INFO: [Synth 8-638] synthesizing module 'counter' [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/sources_1/new/counter.vhd:33]
+INFO: [Synth 8-256] done synthesizing module 'counter' (1#1) [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/sources_1/new/counter.vhd:33]
+INFO: [Synth 8-3491] module 'leddec' declared at 'C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Lab1.srcs/sources_1/new/leddec.vhd:25' bound to instance 'L1' of component 'leddec' [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/sources_1/new/hexcounter.vhd:51]
+INFO: [Synth 8-638] synthesizing module 'leddec' [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Lab1.srcs/sources_1/new/leddec.vhd:34]
+INFO: [Synth 8-256] done synthesizing module 'leddec' (2#1) [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Lab1.srcs/sources_1/new/leddec.vhd:34]
+INFO: [Synth 8-256] done synthesizing module 'hexcount' (3#1) [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/sources_1/new/hexcounter.vhd:32]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1080.543 ; gain = 46.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 1080.543 ; gain = 46.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 1080.543 ; gain = 46.137
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 1080.543 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/constrs_1/new/hexcounter.xdc]
+Finished Parsing XDC File [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/constrs_1/new/hexcounter.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.srcs/constrs_1/new/hexcounter.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/hexcount_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/hexcount_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1172.965 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.035 . Memory (MB): peak = 1172.965 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:33 ; elapsed = 00:00:36 . Memory (MB): peak = 1172.965 ; gain = 138.559
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a100tcsg324-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:33 ; elapsed = 00:00:36 . Memory (MB): peak = 1172.965 ; gain = 138.559
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:33 ; elapsed = 00:00:36 . Memory (MB): peak = 1172.965 ; gain = 138.559
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:33 ; elapsed = 00:00:36 . Memory (MB): peak = 1172.965 ; gain = 138.559
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Muxes : 
+	   5 Input    4 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:39 ; elapsed = 00:00:42 . Memory (MB): peak = 1172.965 ; gain = 138.559
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:04 ; elapsed = 00:01:08 . Memory (MB): peak = 1174.863 ; gain = 140.457
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:04 ; elapsed = 00:01:08 . Memory (MB): peak = 1174.938 ; gain = 140.531
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:04 ; elapsed = 00:01:08 . Memory (MB): peak = 1194.520 ; gain = 160.113
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     1|
+|2     |CARRY4 |     8|
+|3     |LUT1   |     1|
+|4     |LUT4   |     7|
+|5     |FDRE   |    29|
+|6     |IBUF   |     1|
+|7     |OBUF   |    11|
++------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:58 ; elapsed = 00:01:15 . Memory (MB): peak = 1200.305 ; gain = 73.477
+Synthesis Optimization Complete : Time (s): cpu = 00:01:18 ; elapsed = 00:01:22 . Memory (MB): peak = 1200.305 ; gain = 165.898
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.004 . Memory (MB): peak = 1212.414 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1220.047 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+23 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:37 ; elapsed = 00:02:05 . Memory (MB): peak = 1220.047 ; gain = 185.641
+INFO: [Common 17-1381] The checkpoint 'C:/Users/Elizabeth/Desktop/Digital System Design/Lab1/Hex Counter/Hex Counter.runs/synth_1/hexcount.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file hexcount_utilization_synth.rpt -pb hexcount_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Fri Oct 16 21:25:18 2020...
