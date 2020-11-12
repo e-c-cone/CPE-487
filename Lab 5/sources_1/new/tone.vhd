@@ -54,9 +54,9 @@ cnt_pr: process
         --0 - index when "10", -- 3rd quadrant
         --index - 16383 when others; -- 4th quadrant
 
-tone_select: process
+tone_select: process 
 begin
- if btn_press = '1' then
+ if btn_press = '1' then --if button is pressed, switch to square wave
   data <= data_sq;
  else
   data <= data_tri;

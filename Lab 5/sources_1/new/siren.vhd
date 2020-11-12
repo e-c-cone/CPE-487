@@ -23,7 +23,7 @@ architecture Behavioral of siren is
 
 constant lo_tone: UNSIGNED (13 downto 0) := to_unsigned (50, 14); -- lower limit of siren = 256 Hz
 constant hi_tone: UNSIGNED (13 downto 0) := to_unsigned (1000, 14); -- upper limit of siren = 512 Hz
-signal wail_speed: UNSIGNED (7 downto 0) := to_unsigned (8, 8); -- sets wailing speed
+signal wailing_speed: UNSIGNED (7 downto 0) := to_unsigned (8, 8); -- sets wailing speed using switches on fpga
 
 
 component dac_if is
@@ -74,14 +74,17 @@ tim_pr: process
  sclk <= tcount(4);   -- serial data clock (1.56 MHz)
  dac_SCLK <= sclk;   -- also sent to DAC as SCLK
  slo_clk <= tcount(19);   -- clock to control wailing of tone (47.6 Hz)
- wail_speed(0) <= SW0;
- wail_speed(1) <= SW1;
- wail_speed(2) <= SW2;
- wail_speed(3) <= SW3;
- wail_speed(4) <= SW4;
- wail_speed(5) <= SW5;
- wail_speed(6) <= SW6;
- wail_speed(7) <= SW7;
+ 
+ -- switches to change wailing speed
+ wailing_speed(0) <= SW0;
+ wailing_speed(1) <= SW1;
+ wailing_speed(2) <= SW2; 
+ wailing_speed(3) <= SW3;
+ wailing_speed(4) <= SW4;
+ wailing_speed(5) <= SW5;
+ wailing_speed(6) <= SW6;
+ wailing_speed(7) <= SW7;
+ 
 dac: dac_if port map ( SCLK => sclk,   -- instantiate parallel to serial DAC interface
    L_start => dac_load_L,
    R_start => dac_load_R,
@@ -89,16 +92,16 @@ dac: dac_if port map ( SCLK => sclk,   -- instantiate parallel to serial DAC int
    R_data => data_R,
    SDATA => dac_SDIN );
         
-w1: wail port map( lo_pitch => lo_tone,  -- instantiate wailing siren
+wail1: wail port map( lo_pitch => lo_tone,  -- instantiate wailing siren
    hi_pitch => hi_tone,
-   wspeed => wail_speed,
+   wspeed => wailing_speed,
    wclk => slo_clk,
    button_press => BTN0,
    audio_clk => audio_clk,
    audio_data => data_L);   
-w2: wail port map( lo_pitch => hi_tone,  -- instantiate wailing siren
+wail2: wail port map( lo_pitch => hi_tone,  -- instantiate wailing siren
    hi_pitch => lo_tone,
-   wspeed => wail_speed,
+   wspeed => wailing_speed,
    wclk => slo_clk,
    button_press => BTN0,
    audio_clk => audio_clk,
