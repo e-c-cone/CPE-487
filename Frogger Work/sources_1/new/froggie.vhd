@@ -14,7 +14,8 @@ ENTITY froggie IS
 		up        : IN STD_LOGIC;
 		down      : IN STD_LOGIC;
 	    left      : IN STD_LOGIC;
-	    right     : IN STD_LOGIC		
+	    right     : IN STD_LOGIC;
+	    reset     : IN STD_LOGIC		
 	);
 END froggie;
 
@@ -22,43 +23,64 @@ ARCHITECTURE Behavioral OF froggie IS
  -- signals and variables for frog
 	CONSTANT size  : INTEGER := 8;
 	SIGNAL frog_on : STD_LOGIC; -- indicates whether frog is over current pixel position
+	SIGNAL frog_dead : STD_LOGIC := '0';
+	SIGNAL win : STD_LOGIC := '0';
+	SIGNAL frog_dead_on : STD_LOGIC := '0';
+	SIGNAL win_on : STD_LOGIC := '0';
+	SIGNAL frog_deadx  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(400, 11);
+	SIGNAL frog_deady  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(580, 11);
 	-- current frog position - intitialized to center of screen
 	SIGNAL frog_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(400, 11);
 	SIGNAL frog_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(580, 11);
+	-- goal coordinates
+	SIGNAL goal_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(100, 11);
 	-- current frog motion - initialized to +4 pixels/frame
 	SIGNAL frog_hop : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000100";
 	SIGNAL direction  : INTEGER := 8;
 -- signals and variables for cars
-    CONSTANT car_size  : INTEGER := 10;
+    CONSTANT car_size  : INTEGER := 12;
 	SIGNAL car1_on : STD_LOGIC; -- indicates whether car1 is over current pixel position
 	-- current car position 
 	SIGNAL car1_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(10, 11);
-	SIGNAL car1_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(300, 11);
+	SIGNAL car1_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(250, 11);
 	-- current car motion - initialized to +3 pixels/frame
 	SIGNAL car1_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000011";
 	-- car 2 -
 	SIGNAL car2_on : STD_LOGIC; -- indicates whether car1 is over current pixel position
 	-- current car position 
 	SIGNAL car2_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(10, 11);
-	SIGNAL car2_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(340, 11);
+	SIGNAL car2_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(300, 11);
 	-- current car motion - initialized to +4 pixels/frame
 	SIGNAL car2_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000100";
-	-- car 2 -
+	-- car 3 -
 	SIGNAL car3_on : STD_LOGIC; -- indicates whether car1 is over current pixel position
 	-- current car position 
 	SIGNAL car3_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(10, 11);
-	SIGNAL car3_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(260, 11);
+	SIGNAL car3_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(350, 11);
 	-- current car motion - initialized to +5 pixels/frame
 	SIGNAL car3_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";	
+	-- car 4 -
+	SIGNAL car4_on : STD_LOGIC; -- indicates whether car1 is over current pixel position
+	-- current car position 
+	SIGNAL car4_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(20, 11);
+	SIGNAL car4_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(150, 11);
+	-- current car motion - initialized to +5 pixels/frame
+	SIGNAL car4_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";
+	-- car 5 -
+	SIGNAL car5_on : STD_LOGIC; -- indicates whether car5 is over current pixel position
+	-- current car position 
+	SIGNAL car5_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(30, 11);
+	SIGNAL car5_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(200, 11);
+	-- current car motion - initialized to +5 pixels/frame
+	SIGNAL car5_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";		
 		
 BEGIN
-	red <= car1_on OR (car2_on) OR car3_on;
-	green <= frog_on;
-	blue  <= NOT frog_on;
+	-- THIS IS WHERE THE COLORS WERE DONE FOR DRAWING -- WILL CHANGE TO EJ'S METHOD TOMORROW & ADD THE CONSTRAINT CODE 
 
 	-- process to draw frog current pixel address is covered by frog position
-	fdraw : PROCESS (frog_x, frog_y, pixel_row, pixel_col) IS
+	fdraw : PROCESS (frog_x, frog_y, pixel_row, pixel_col, frog_dead, win) IS
 	BEGIN
+	    IF NOT (frog_dead = '1' OR win = '1') THEN
 		IF (pixel_col >= frog_x - size) AND
 		   (pixel_col <= frog_x + size) AND
 		   (pixel_row >= frog_y - size) AND
@@ -66,6 +88,21 @@ BEGIN
 			frog_on <= '1';
 		ELSE
 			frog_on <= '0';
+		END IF;
+		ELSIF frog_dead = '1' THEN
+		IF (pixel_col >= frog_deadx - size) AND
+		   (pixel_col <= frog_deadx + size) AND
+		   (pixel_row >= frog_deady - size) AND
+	  	   (pixel_row <= frog_deady + size) THEN
+			frog_dead_on <= '1';
+	    ELSIF win = '1' THEN
+	       IF (pixel_col >= frog_deadx - size) AND
+		   (pixel_col <= frog_deadx + size) AND
+		   (pixel_row >= frog_deady - size) AND
+	  	   (pixel_row <= frog_deady + size) THEN
+			win_on <= '1'; 
+		END IF;
+		END IF;
 		END IF;
 		END PROCESS;
 		
@@ -81,6 +118,8 @@ BEGIN
 	       direction <= 3;
 	   ELSIF right = '1' THEN
 	       direction <= 4;
+	   ELSIF reset = '1' THEN
+	       direction <= 5;
 	   ELSE
 	       direction <= 0;
 	   END IF;
@@ -93,6 +132,11 @@ BEGIN
 	       frog_x <= frog_x - frog_hop;
 	   ELSIF direction = 4 THEN
 	       frog_x <= frog_x + frog_hop;
+	   ELSIF direction = 5 THEN
+	       frog_x <= CONV_STD_LOGIC_VECTOR(400, 11);
+           frog_y <= CONV_STD_LOGIC_VECTOR(580, 11);
+           frog_dead <= '0';
+           win <= '0';
 	   ELSIF direction = 0 THEN
 	       frog_x <= frog_x;  
 	   END IF;  
@@ -102,10 +146,19 @@ BEGIN
        ((frog_x >= car2_x - 15 AND frog_x <= car2_x + 15) 
        AND (frog_y >= car2_y - 15 AND frog_y <= car2_y + 15)) OR
        ((frog_x >= car3_x - 15 AND frog_x <= car3_x + 15) 
-       AND (frog_y >= car3_y - 15 AND frog_y <= car3_y + 15))
+       AND (frog_y >= car3_y - 15 AND frog_y <= car3_y + 15)) OR
+       ((frog_x >= car4_x - 15 AND frog_x <= car4_x + 15) 
+       AND (frog_y >= car4_y - 15 AND frog_y <= car4_y + 15)) OR
+       ((frog_x >= car5_x - 15 AND frog_x <= car5_x + 15) 
+       AND (frog_y >= car5_y - 15 AND frog_y <= car5_y + 15))
        THEN
-           frog_x <= CONV_STD_LOGIC_VECTOR(400, 11);
-           frog_y <= CONV_STD_LOGIC_VECTOR(580, 11); 
+           frog_dead <= '1';
+           frog_deadx <= frog_x;
+           frog_deady <= frog_y;
+       ELSIF (frog_y <= goal_y) THEN
+           win <= '1';
+           frog_deadx <= frog_x;
+           frog_deady <= frog_y;           
        END IF;
 	   END PROCESS;
 	
@@ -179,6 +232,52 @@ BEGIN
 				car3_x_motion <= "00000000100"; -- +4 pixels
 			END IF;
 			car3_x <= car3_x + car3_x_motion; -- compute next car3 position
+		END PROCESS;
+		c4draw : PROCESS (car4_x, car4_y, pixel_row, pixel_col) IS
+	   BEGIN
+		IF (pixel_col >= car4_x - size) AND
+		 (pixel_col <= car4_x + size) AND
+			 (pixel_row >= car4_y - size) AND
+			 (pixel_row <= car4_y + size) THEN
+				car4_on <= '1';
+		ELSE
+			car4_on <= '0';
+		END IF;
+		END PROCESS;
+		-- process to move car3 once every frame (i.e. once every vsync pulse)
+		mcar4 : PROCESS
+		BEGIN
+			WAIT UNTIL rising_edge(v_sync);
+			-- allow for bounce off top or bottom of screen
+			IF car4_x + size >= 800 THEN
+				car4_x_motion <= "11111111100"; -- -4 pixels
+			ELSIF car4_x <= size THEN
+				car4_x_motion <= "00000000100"; -- +4 pixels
+			END IF;
+			car4_x <= car4_x + car4_x_motion; -- compute next car3 position
+		END PROCESS;
+		c5draw : PROCESS (car5_x, car5_y, pixel_row, pixel_col) IS
+	   BEGIN
+		IF (pixel_col >= car5_x - size) AND
+		 (pixel_col <= car5_x + size) AND
+			 (pixel_row >= car5_y - size) AND
+			 (pixel_row <= car5_y + size) THEN
+				car5_on <= '1';
+		ELSE
+			car5_on <= '0';
+		END IF;
+		END PROCESS;
+		-- process to move car3 once every frame (i.e. once every vsync pulse)
+		mcar5 : PROCESS
+		BEGIN
+			WAIT UNTIL rising_edge(v_sync);
+			-- allow for bounce off top or bottom of screen
+			IF car5_x + size >= 800 THEN
+				car5_x_motion <= "11111111100"; -- -4 pixels
+			ELSIF car5_x <= size THEN
+				car5_x_motion <= "00000000100"; -- +4 pixels
+			END IF;
+			car5_x <= car5_x + car5_x_motion; -- compute next car3 position
 		END PROCESS;
 END Behavioral;
 

@@ -78,9 +78,9 @@ ARCHITECTURE Behavioral OF vga_top IS
             
             up: IN STD_LOGIC;
             
-            down: IN STD_LOGIC
+            down: IN STD_LOGIC;
                         
-            --reset: IN STD_LOGIC
+            reset: IN STD_LOGIC
 		);
 
 	END COMPONENT;
@@ -163,7 +163,9 @@ BEGIN
 		
 		left => b_left,
 		
-		right => b_right
+		right => b_right,
+		
+		reset => b_reset
 		
 		--reset => b_reset
 
