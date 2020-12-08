@@ -25,8 +25,8 @@ ARCHITECTURE Behavioral OF froggie IS
 	SIGNAL frog_on : STD_LOGIC; -- indicates whether frog is over current pixel position
 	SIGNAL frog_dead : STD_LOGIC := '0';
 	SIGNAL win : STD_LOGIC := '0';
-	SIGNAL frog_dead_on : STD_LOGIC := '0';
-	SIGNAL win_on : STD_LOGIC := '0';
+	SIGNAL frog_dead_on : STD_LOGIC;
+	SIGNAL win_on : STD_LOGIC;
 	SIGNAL frog_deadx  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(400, 11);
 	SIGNAL frog_deady  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(580, 11);
 	-- current frog position - intitialized to center of screen
@@ -76,9 +76,9 @@ ARCHITECTURE Behavioral OF froggie IS
 		
 BEGIN
 	-- THIS IS WHERE THE COLORS WERE DONE FOR DRAWING -- WILL CHANGE TO EJ'S METHOD TOMORROW & ADD THE CONSTRAINT CODE 
-    green <= '0' or frog_on;
-    blue <= '0' or car1_on or car2_on or car3_on or car4_on or car5_on;
-    red <= '0' or frog_dead_on;
+    red <= (NOT frog_on); -- color setup for red ball and cyan bat on white background
+    green <= NOT(car1_on or car2_on or car3_on or car4_on or car5_on or win_on);
+    blue <= NOT(car1_on or car2_on or car3_on or car4_on or car5_on or frog_dead_on);
     
 	-- process to draw frog current pixel address is covered by frog position
 	fdraw : PROCESS (frog_x, frog_y, pixel_row, pixel_col, frog_dead, win) IS
