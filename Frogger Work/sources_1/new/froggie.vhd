@@ -76,7 +76,10 @@ ARCHITECTURE Behavioral OF froggie IS
 		
 BEGIN
 	-- THIS IS WHERE THE COLORS WERE DONE FOR DRAWING -- WILL CHANGE TO EJ'S METHOD TOMORROW & ADD THE CONSTRAINT CODE 
-
+    green <= '0' or frog_on;
+    blue <= '0' or car1_on or car2_on or car3_on or car4_on or car5_on;
+    red <= '0' or frog_dead_on;
+    
 	-- process to draw frog current pixel address is covered by frog position
 	fdraw : PROCESS (frog_x, frog_y, pixel_row, pixel_col, frog_dead, win) IS
 	BEGIN
