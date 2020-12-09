@@ -34,7 +34,11 @@ ENTITY vga_top IS
 		
 		b_down : IN STD_LOGIC;
 		
-		b_reset : IN STD_LOGIC
+		b_reset : IN STD_LOGIC;
+		
+		anode : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
+		
+		seg : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)
 
 	);
 
@@ -45,14 +49,20 @@ END vga_top;
 ARCHITECTURE Behavioral OF vga_top IS
 
 	SIGNAL ck_25 : STD_LOGIC;
-
-	-- internal signals to connect modules
+	
+	SIGNAL cnt : std_logic_vector(20 DOWNTO 0);
 
 	SIGNAL S_red, S_green, S_blue : STD_LOGIC;
 
 	SIGNAL S_vsync : STD_LOGIC;
 
 	SIGNAL S_pixel_row, S_pixel_col : STD_LOGIC_VECTOR (10 DOWNTO 0);
+	
+	SIGNAL S_data : STD_LOGIC_VECTOR (15 DOWNTO 0);
+	
+	SIGNAL S_display : STD_LOGIC_VECTOR (3 DOWNTO 0);
+	
+	SIGNAL led_mpx : STD_LOGIC_VECTOR (1 DOWNTO 0); -- 7-seg multiplexing clock
 
 	COMPONENT froggie IS
 
@@ -80,7 +90,9 @@ ARCHITECTURE Behavioral OF vga_top IS
             
             down: IN STD_LOGIC;
                         
-            reset: IN STD_LOGIC
+            reset: IN STD_LOGIC;
+
+			score: OUT STD_LOGIC_VECTOR (3 DOWNTO 0)
 		);
 
 	END COMPONENT;
@@ -114,20 +126,44 @@ ARCHITECTURE Behavioral OF vga_top IS
 		);
 
 	END COMPONENT;
+	
+	COMPONENT leddec IS
+
+        PORT (
+
+            dig : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+
+            data : IN STD_LOGIC_VECTOR (3 DOWNTO 0);
+
+            anode : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
+
+            seg : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)
+
+        );
+
+    END COMPONENT;
 
 BEGIN
 
 	-- Process to generate 25 MHz clock from 50 MHz system clock
 
-	ckp : PROCESS
+	ckp : PROCESS (clk_50MHz)
 
 	BEGIN
 
 		WAIT UNTIL rising_edge(clk_50MHz);
 
 		ck_25 <= NOT ck_25;
+		
+		IF rising_edge(clk_50MHz) THEN
+		
+			cnt <= cnt + 1;
+
+		END IF;
 
 	END PROCESS;
+
+	led_mpx <= cnt(18 downto 17);
 
 	-- vga_driver only drives MSB of red, green & blue
 
@@ -141,7 +177,7 @@ BEGIN
 
 	add_frog : froggie
 
-	PORT MAP(--instantiate ball component
+	PORT MAP( --instantiate frog component
 
 		v_sync => S_vsync, 
 
@@ -165,41 +201,63 @@ BEGIN
 		
 		right => b_right,
 		
-		reset => b_reset
+		reset => b_reset,
 		
-		--reset => b_reset
+		score => S_data
+		
+	);
 
-		);
+	vga_driver : vga_sync
 
-		vga_driver : vga_sync
+	PORT MAP(--instantiate vga_sync component
 
-		PORT MAP(--instantiate vga_sync component
+		pixel_clk => ck_25, 
 
-			pixel_clk => ck_25, 
+		red_in => S_red, 
 
-			red_in => S_red, 
+		green_in => S_green, 
 
-			green_in => S_green, 
+		blue_in => S_blue, 
 
-			blue_in => S_blue, 
+		red_out => vga_red(2), 
 
-			red_out => vga_red(2), 
+		green_out => vga_green(2), 
 
-			green_out => vga_green(2), 
+		blue_out => vga_blue(1), 
 
-			blue_out => vga_blue(1), 
+		pixel_row => S_pixel_row, 
 
-			pixel_row => S_pixel_row, 
+		pixel_col => S_pixel_col, 
 
-			pixel_col => S_pixel_col, 
+		hsync => vga_hsync, 
 
-			hsync => vga_hsync, 
+		vsync => S_vsync
 
-			vsync => S_vsync
+	);
 
-		);
+	vga_vsync <= S_vsync; --connect output vsync
+	
+	led_driver : leddec
+	
+	PORT MAP(
+		
+		dig => led_mpx,
+	
+		data => S_display,
+	
+		anode => anode,
+	
+		seg => seg
+	
+	);
+	
+	S_display <= S_data(3 DOWNTO 0) WHEN led_mpx = "00" ELSE
 
-		vga_vsync <= S_vsync; --connect output vsync
+			   S_data(7 DOWNTO 4) WHEN led_mpx = "01" ELSE
+
+			   S_data(11 DOWNTO 8) WHEN led_mpx = "10" ELSE
+
+			   S_data(15 DOWNTO 12);
 
 END Behavioral;
 

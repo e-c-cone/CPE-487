@@ -15,7 +15,8 @@ ENTITY froggie IS
 		down      : IN STD_LOGIC;
 	    left      : IN STD_LOGIC;
 	    right     : IN STD_LOGIC;
-	    reset     : IN STD_LOGIC		
+	    reset     : IN STD_LOGIC;
+		score 	  : OUT STD_LOGIC_VECTOR (15 DOWNTO 0);
 	);
 END froggie;
 
@@ -72,14 +73,15 @@ ARCHITECTURE Behavioral OF froggie IS
 	SIGNAL car5_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(30, 11);
 	SIGNAL car5_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(200, 11);
 	-- current car motion - initialized to +5 pixels/frame
-	SIGNAL car5_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";		
+	SIGNAL car5_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";	
+	SIGNAL s_score : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
+	SIGNAL score_incr : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000001";
 		
 BEGIN
 	-- THIS IS WHERE THE COLORS WERE DONE FOR DRAWING -- WILL CHANGE TO EJ'S METHOD TOMORROW & ADD THE CONSTRAINT CODE 
     red <= (NOT frog_on); -- color setup for red ball and cyan bat on white background
     green <= NOT(car1_on or car2_on or car3_on or car4_on or car5_on or win_on);
     blue <= NOT(car1_on or car2_on or car3_on or car4_on or car5_on or frog_dead_on);
-    
 	-- process to draw frog current pixel address is covered by frog position
 	fdraw : PROCESS (frog_x, frog_y, pixel_row, pixel_col, frog_dead, win) IS
 	BEGIN
@@ -161,7 +163,8 @@ BEGIN
        ELSIF (frog_y <= goal_y) THEN
            win <= '1';
            frog_deadx <= frog_x;
-           frog_deady <= frog_y;           
+           frog_deady <= frog_y;   
+		   s_score <= s_score + score_incr;		   
        END IF;
 	   END PROCESS;
 	
