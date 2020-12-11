@@ -16,7 +16,7 @@ ENTITY froggie IS
 	    left      : IN STD_LOGIC;
 	    right     : IN STD_LOGIC;
 	    reset     : IN STD_LOGIC;
-		score 	  : OUT STD_LOGIC_VECTOR (15 DOWNTO 0);
+		score 	  : OUT STD_LOGIC_VECTOR (15 DOWNTO 0)
 	);
 END froggie;
 
@@ -45,43 +45,45 @@ ARCHITECTURE Behavioral OF froggie IS
 	SIGNAL car1_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(10, 11);
 	SIGNAL car1_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(250, 11);
 	-- current car motion - initialized to +3 pixels/frame
-	SIGNAL car1_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000011";
+	SIGNAL car1_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "10100100011";
 	-- car 2 -
 	SIGNAL car2_on : STD_LOGIC; -- indicates whether car1 is over current pixel position
 	-- current car position 
 	SIGNAL car2_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(10, 11);
 	SIGNAL car2_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(300, 11);
 	-- current car motion - initialized to +4 pixels/frame
-	SIGNAL car2_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000100";
+	SIGNAL car2_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "01011100100";
 	-- car 3 -
 	SIGNAL car3_on : STD_LOGIC; -- indicates whether car1 is over current pixel position
 	-- current car position 
 	SIGNAL car3_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(10, 11);
 	SIGNAL car3_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(350, 11);
 	-- current car motion - initialized to +5 pixels/frame
-	SIGNAL car3_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";	
+	SIGNAL car3_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "01110010111";	
 	-- car 4 -
 	SIGNAL car4_on : STD_LOGIC; -- indicates whether car1 is over current pixel position
 	-- current car position 
 	SIGNAL car4_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(20, 11);
 	SIGNAL car4_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(150, 11);
 	-- current car motion - initialized to +5 pixels/frame
-	SIGNAL car4_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";
+	SIGNAL car4_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "11110001001";
 	-- car 5 -
 	SIGNAL car5_on : STD_LOGIC; -- indicates whether car5 is over current pixel position
 	-- current car position 
 	SIGNAL car5_x  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(30, 11);
 	SIGNAL car5_y  : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(200, 11);
 	-- current car motion - initialized to +5 pixels/frame
-	SIGNAL car5_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000000101";	
+	SIGNAL car5_x_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := "00000001101";	
 	SIGNAL s_score : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000000";
 	SIGNAL score_incr : STD_LOGIC_VECTOR(15 DOWNTO 0) := "0000000000000001";
 		
 BEGIN
 	-- THIS IS WHERE THE COLORS WERE DONE FOR DRAWING -- WILL CHANGE TO EJ'S METHOD TOMORROW & ADD THE CONSTRAINT CODE 
-    red <= (NOT frog_on); -- color setup for red ball and cyan bat on white background
-    green <= NOT(car1_on or car2_on or car3_on or car4_on or car5_on or win_on);
-    blue <= NOT(car1_on or car2_on or car3_on or car4_on or car5_on or frog_dead_on);
+    red <= (NOT frog_on or win_on); -- color setup for red ball and cyan bat on white background
+    green <= NOT(car1_on or car2_on or car3_on or car4_on or car5_on or frog_dead_on);
+    blue <= win_on or NOT(car1_on or car2_on or car3_on or car4_on or car5_on or frog_dead_on);
+    
+    score <= s_score;
 	-- process to draw frog current pixel address is covered by frog position
 	fdraw : PROCESS (frog_x, frog_y, pixel_row, pixel_col, frog_dead, win) IS
 	BEGIN
@@ -100,12 +102,14 @@ BEGIN
 		   (pixel_row >= frog_deady - size) AND
 	  	   (pixel_row <= frog_deady + size) THEN
 			frog_dead_on <= '1';
+			frog_on <= '0';
 	    ELSIF win = '1' THEN
 	       IF (pixel_col >= frog_deadx - size) AND
 		   (pixel_col <= frog_deadx + size) AND
 		   (pixel_row >= frog_deady - size) AND
 	  	   (pixel_row <= frog_deady + size) THEN
 			win_on <= '1'; 
+			frog_on <= '0';
 		END IF;
 		END IF;
 		END IF;
@@ -157,17 +161,20 @@ BEGIN
        ((frog_x >= car5_x - 15 AND frog_x <= car5_x + 15) 
        AND (frog_y >= car5_y - 15 AND frog_y <= car5_y + 15))
        THEN
+           s_score <= CONV_STD_LOGIC_VECTOR(0, 16);
            frog_dead <= '1';
            frog_deadx <= frog_x;
            frog_deady <= frog_y;
        ELSIF (frog_y <= goal_y) THEN
+           IF win = '0' THEN
+            s_score <= s_score + score_incr;	
+           END IF;
            win <= '1';
            frog_deadx <= frog_x;
-           frog_deady <= frog_y;   
-		   s_score <= s_score + score_incr;		   
+           frog_deady <= frog_y; 	   
        END IF;
 	   END PROCESS;
-	
+	   
 	--process to draw cars
 	c1draw : PROCESS (car1_x, car1_y, pixel_row, pixel_col) IS
 	BEGIN

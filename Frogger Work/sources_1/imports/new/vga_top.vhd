@@ -60,8 +60,6 @@ ARCHITECTURE Behavioral OF vga_top IS
 	
 	SIGNAL S_data : STD_LOGIC_VECTOR (15 DOWNTO 0);
 	
-	SIGNAL S_display : STD_LOGIC_VECTOR (3 DOWNTO 0);
-	
 	SIGNAL led_mpx : STD_LOGIC_VECTOR (1 DOWNTO 0); -- 7-seg multiplexing clock
 
 	COMPONENT froggie IS
@@ -92,7 +90,7 @@ ARCHITECTURE Behavioral OF vga_top IS
                         
             reset: IN STD_LOGIC;
 
-			score: OUT STD_LOGIC_VECTOR (3 DOWNTO 0)
+			score: OUT STD_LOGIC_VECTOR (15 DOWNTO 0)
 		);
 
 	END COMPONENT;
@@ -133,7 +131,7 @@ ARCHITECTURE Behavioral OF vga_top IS
 
             dig : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
 
-            data : IN STD_LOGIC_VECTOR (3 DOWNTO 0);
+            f_data : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
 
             anode : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
 
@@ -146,22 +144,14 @@ ARCHITECTURE Behavioral OF vga_top IS
 BEGIN
 
 	-- Process to generate 25 MHz clock from 50 MHz system clock
-
-	ckp : PROCESS (clk_50MHz)
-
-	BEGIN
-
-		WAIT UNTIL rising_edge(clk_50MHz);
-
-		ck_25 <= NOT ck_25;
-		
-		IF rising_edge(clk_50MHz) THEN
-		
+ckp : PROCESS (clk_50MHz)
+	BEGIN	
+		IF rising_edge(clk_50MHz) THEN		
 			cnt <= cnt + 1;
-
+			ck_25 <= NOT ck_25;
 		END IF;
-
 	END PROCESS;
+
 
 	led_mpx <= cnt(18 downto 17);
 
@@ -243,7 +233,7 @@ BEGIN
 		
 		dig => led_mpx,
 	
-		data => S_display,
+		f_data => S_data,
 	
 		anode => anode,
 	
@@ -251,13 +241,6 @@ BEGIN
 	
 	);
 	
-	S_display <= S_data(3 DOWNTO 0) WHEN led_mpx = "00" ELSE
-
-			   S_data(7 DOWNTO 4) WHEN led_mpx = "01" ELSE
-
-			   S_data(11 DOWNTO 8) WHEN led_mpx = "10" ELSE
-
-			   S_data(15 DOWNTO 12);
 
 END Behavioral;
 
